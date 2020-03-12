@@ -5,6 +5,7 @@ import keras
 from keras.initializers import glorot_normal
 from sklearn.model_selection import train_test_split
 from time import localtime, strftime
+from datetime import datetime
 from settings import logger, app_cfg
 from train.trainingplot import TrainingPlot
 from train.confusionmatrix import ConfusionMatrix
@@ -51,7 +52,7 @@ class ModelTrain():
             data = pickle.load(open(data_path, "rb"))
         except Exception as err:
             #TODO Exception
-            logger.erro(err.msg())
+            logger.error(err)
             exit
         
         logger.debug(f"Loaded {len(data)} samples.")
@@ -78,10 +79,10 @@ class ModelTrain():
 
     def model_train(self, batch_size, epochs):
         logger.info(f"Starting model training. [batch_size={batch_size}, epochs={epochs}]")
-        self.start_time = localtime()
+        start_time = datetime.now()
         history = self.model.fit(self.train_data, self.train_label, batch_size=batch_size, validation_data=(self.test_data, self.test_label), epochs=epochs, callbacks=[self.tb])
-        self.end_time = localtime()
-        logger.info("Model train ended.")
+        end_time = datetime.now()
+        logger.info(f"Model train ended. (Train time:{end_time - start_time})")
         logger.info("Saving model.")
         try:
             self.model.save(f"{self.logdir}/model.h5")
@@ -89,5 +90,6 @@ class ModelTrain():
         except Exception as err:
             logger.error(err)
     
+        logger.info("Plotting accuracy/loss graphics.")
         TrainingPlot(outputdir=self.logdir, history=history)
         #self.log_confusion_matrix()
