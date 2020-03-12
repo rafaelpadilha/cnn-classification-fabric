@@ -1,15 +1,14 @@
 import logging
-
+import pathlib
 
 def app_cfg():
     config = {}
-    config['path'] = "/home/rafael/ifb/tcc/cnn-classification-fabric/"
+    config['path'] = str(pathlib.Path(__file__).parent.absolute())+"/"
     config['data_path'] = config['path'] + "data/fabric.pickle"
     config['img_size'] = 150
     config['class_names'] = ['tela', 'sarja', 'cetim']
     config['class_n'] = len(config['class_names'])
     return config
-
 
 logging.basicConfig(
     format=("%(asctime)s,%(msecs)-3d - %(name)-12s - %(levelname)-8s => %(message)s"),
