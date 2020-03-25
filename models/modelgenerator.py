@@ -205,11 +205,4 @@ def save_model_json(
             exit()
 
     logger.info('Saving weights to file.')
-    with open(f"{app_cfg['path']}models/{model_name}/weights.h5", 'w') as f:
-        try:
-            f.write(model_json)
-            logger.info(
-                f"Weights saved on '{app_cfg['path']}models/{model_name}'")
-        except Exception as err:
-            logger.error(err)
-            exit()
+    model.save_weights(f"{app_cfg['path']}models/{model_name}/weights.h5")
